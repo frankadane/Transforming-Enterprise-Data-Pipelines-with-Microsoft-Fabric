@@ -26,7 +26,9 @@ The project follows a **multi-layered architecture**:
 ```
 SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → Lakehouse (Silver) → Fabric Warehouse (Gold) → Power BI Dashboards
 ```
-![Project Architecture](docs/Presentation_project.jpg).
+![Project Architecture](doc/Presentation_project.jpg).
+
+![Pipeline](pipelines/pipeline_flowchart.png).
 ---
 
 ## **3️⃣ Data Ingestion (Bronze Layer)**
