@@ -1,0 +1,316 @@
+{
+    "name": "copy_from_sqlserver1",
+    "objectId": "1253e28b-cbd6-40f9-bb0a-bbf3e6cdd40d",
+    "properties": {
+        "activities": [
+            {
+                "name": "Look for all tables",
+                "type": "Lookup",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "OdbcSource",
+                        "query": "SELECT s.name as SchemaName,\nt.name AS TableName\nFROM AdventureWorksLT2017.sys.tables t\nINNER JOIN AdventureWorksLT2017.sys.schemas s\nON t.schema_id = s.schema_id\nwhere s.name = 'SalesLT'",
+                        "queryTimeout": "02:00:00"
+                    },
+                    "firstRowOnly": false,
+                    "datasetSettings": {
+                        "annotations": [],
+                        "type": "OdbcTable",
+                        "schema": [],
+                        "externalReferences": {
+                            "connection": "be4288cf-2010-45e3-ada9-3a9970c5ab80"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "ForEach Schema table",
+                "type": "ForEach",
+                "dependsOn": [
+                    {
+                        "activity": "Look for all tables",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "typeProperties": {
+                    "items": {
+                        "value": "@activity('Look for all tables').output.value",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "If Condition1",
+                            "type": "IfCondition",
+                            "dependsOn": [],
+                            "typeProperties": {
+                                "expression": {
+                                    "value": "@equals(item().TableName, 'SalesOrderDetail')\n",
+                                    "type": "Expression"
+                                },
+                                "ifFalseActivities": [
+                                    {
+                                        "name": "Copy dimension tables",
+                                        "type": "Copy",
+                                        "dependsOn": [],
+                                        "policy": {
+                                            "timeout": "0.12:00:00",
+                                            "retry": 0,
+                                            "retryIntervalInSeconds": 30,
+                                            "secureOutput": false,
+                                            "secureInput": false
+                                        },
+                                        "typeProperties": {
+                                            "source": {
+                                                "type": "OdbcSource",
+                                                "query": {
+                                                    "value": "@{concat('SELECT * FROM AdventureWorksLT2017.', item().SchemaName, '.', item().TableName)}",
+                                                    "type": "Expression"
+                                                },
+                                                "queryTimeout": "02:00:00",
+                                                "datasetSettings": {
+                                                    "annotations": [],
+                                                    "type": "OdbcTable",
+                                                    "schema": [],
+                                                    "externalReferences": {
+                                                        "connection": "be4288cf-2010-45e3-ada9-3a9970c5ab80"
+                                                    }
+                                                }
+                                            },
+                                            "sink": {
+                                                "type": "ParquetSink",
+                                                "storeSettings": {
+                                                    "type": "LakehouseWriteSettings"
+                                                },
+                                                "formatSettings": {
+                                                    "type": "ParquetWriteSettings",
+                                                    "enableVertiParquet": true
+                                                },
+                                                "datasetSettings": {
+                                                    "annotations": [],
+                                                    "linkedService": {
+                                                        "name": "LH_Demo",
+                                                        "properties": {
+                                                            "annotations": [],
+                                                            "type": "Lakehouse",
+                                                            "typeProperties": {
+                                                                "workspaceId": "dd4e4e02-925b-4769-9c27-f6784f8f60b3",
+                                                                "artifactId": "e105fd8c-5272-4bb9-ae4b-84d9a67ffa31",
+                                                                "rootFolder": "Files"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "Parquet",
+                                                    "typeProperties": {
+                                                        "location": {
+                                                            "type": "LakehouseLocation",
+                                                            "fileName": {
+                                                                "value": "@{concat(item().TableName, '.parquet')}",
+                                                                "type": "Expression"
+                                                            },
+                                                            "folderPath": {
+                                                                "value": "@{concat('bronze/',item().SchemaName, '/', item().TableName)}",
+                                                                "type": "Expression"
+                                                            }
+                                                        },
+                                                        "compressionCodec": "snappy"
+                                                    },
+                                                    "schema": []
+                                                }
+                                            },
+                                            "enableStaging": false,
+                                            "translator": {
+                                                "type": "TabularTranslator",
+                                                "typeConversion": true,
+                                                "typeConversionSettings": {
+                                                    "allowDataTruncation": true,
+                                                    "treatBooleanAsNumber": false
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "ifTrueActivities": [
+                                    {
+                                        "name": "Copy Sales Details",
+                                        "type": "Copy",
+                                        "dependsOn": [],
+                                        "policy": {
+                                            "timeout": "0.12:00:00",
+                                            "retry": 0,
+                                            "retryIntervalInSeconds": 30,
+                                            "secureOutput": false,
+                                            "secureInput": false
+                                        },
+                                        "typeProperties": {
+                                            "source": {
+                                                "type": "OdbcSource",
+                                                "query": {
+                                                    "value": "@{concat('SELECT * \nFROM AdventureWorksLT2017.[SalesLT].[SalesOrderDetail]  \nWHERE ModifiedDate >= ''', formatDateTime(adddays(utcNow(),-1),'yyyy-MM-dd'), ''' AND ModifiedDate < ''', formatDateTime(utcNow(),'yyyy-MM-dd'), '''')}\n",
+                                                    "type": "Expression"
+                                                },
+                                                "queryTimeout": "02:00:00",
+                                                "datasetSettings": {
+                                                    "annotations": [],
+                                                    "type": "OdbcTable",
+                                                    "schema": [],
+                                                    "typeProperties": {
+                                                        "tableName": "SELECT *  FROM AdventureWorksLT2017.[SalesLT].[SalesOrderDetail]  WHERE ModifiedDate >= CAST(CONVERT(DATE, GETDATE()-1) AS DATETIME2) AND ModifiedDate < CAST(CONVERT(DATE, GETDATE()+0) AS DATETIME2)"
+                                                    },
+                                                    "externalReferences": {
+                                                        "connection": "be4288cf-2010-45e3-ada9-3a9970c5ab80"
+                                                    }
+                                                }
+                                            },
+                                            "sink": {
+                                                "type": "ParquetSink",
+                                                "storeSettings": {
+                                                    "type": "LakehouseWriteSettings"
+                                                },
+                                                "formatSettings": {
+                                                    "type": "ParquetWriteSettings",
+                                                    "enableVertiParquet": true
+                                                },
+                                                "datasetSettings": {
+                                                    "annotations": [],
+                                                    "linkedService": {
+                                                        "name": "LH_Demo",
+                                                        "properties": {
+                                                            "annotations": [],
+                                                            "type": "Lakehouse",
+                                                            "typeProperties": {
+                                                                "workspaceId": "dd4e4e02-925b-4769-9c27-f6784f8f60b3",
+                                                                "artifactId": "e105fd8c-5272-4bb9-ae4b-84d9a67ffa31",
+                                                                "rootFolder": "Files"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "Parquet",
+                                                    "typeProperties": {
+                                                        "location": {
+                                                            "type": "LakehouseLocation",
+                                                            "fileName": {
+                                                                "value": "@{concat(item().TableName, '.parquet')}",
+                                                                "type": "Expression"
+                                                            },
+                                                            "folderPath": {
+                                                                "value": "@{concat('bronze/',item().SchemaName, '/', item().TableName)}",
+                                                                "type": "Expression"
+                                                            }
+                                                        },
+                                                        "compressionCodec": "snappy"
+                                                    },
+                                                    "schema": []
+                                                }
+                                            },
+                                            "enableStaging": false,
+                                            "translator": {
+                                                "type": "TabularTranslator",
+                                                "typeConversion": true,
+                                                "typeConversionSettings": {
+                                                    "allowDataTruncation": true,
+                                                    "treatBooleanAsNumber": false
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "Silver layer Notebook",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "bronze layer Notebook",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "164d586e-3f6b-4738-8f36-f692f84f15a1",
+                    "workspaceId": "dd4e4e02-925b-4769-9c27-f6784f8f60b3"
+                }
+            },
+            {
+                "name": "bronze layer Notebook",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "ForEach Schema table",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "f38ee75f-7356-48c6-beba-bae497dfec0c",
+                    "workspaceId": "dd4e4e02-925b-4769-9c27-f6784f8f60b3"
+                }
+            },
+            {
+                "name": "Daily update of warehouse",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Silver layer Notebook",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "storedProcedureName": "[SalesDB].[Update_Warehouse_Daily]"
+                },
+                "linkedService": {
+                    "name": "WH_SalesLT",
+                    "properties": {
+                        "annotations": [],
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                            "endpoint": "kdf3tskeg22e3ith7kcn6l2m5m-ajhe5xk3sjuuphbh6z4e7d3awm.datawarehouse.fabric.microsoft.com",
+                            "artifactId": "df9c701d-7453-4624-85e4-9a31b62c29f3",
+                            "workspaceId": "dd4e4e02-925b-4769-9c27-f6784f8f60b3"
+                        }
+                    }
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "986b93fe-65f0-4be4-afc2-7a34b9c42b2f",
+        "lastPublishTime": "2025-03-02T19:54:55Z"
+    }
+}
