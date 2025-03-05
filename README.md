@@ -94,8 +94,6 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 
 ## **5️⃣ Fabric Warehouse & Reporting**
 
-
-
 ### **Power BI Integration**
 - **Direct Lake Mode** enables real-time reporting.
 - **Dashboards provide insights on:**
@@ -124,9 +122,44 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 ✅ **Scalable architecture ready for enterprise adoption**.  
 
 ---
+## **📌 How to Set Up the Project**
+
+### **1️⃣ Set Up Microsoft Fabric Environment**
+- Create a **Microsoft Fabric Lakehouse**.
+- Create a **Fabric Warehouse** for structured analytics.
+- Import **SQL scripts** into the **Fabric Warehouse**.
+- Deploy **Pipelines** to automate data ingestion.
+
+### **2️⃣ Execute Notebooks for Data Processing**
+- Run **bronze_layer.ipynb** for raw data ingestion.
+- Run **silver_layer.ipynb** for data cleansing.
+- Run **gold_layer.ipynb** for schema transformation.
+
+### **3️⃣ Load Data into Power BI**
+- Open `sales_dashboard.pbix` in **Power BI Desktop**.
+- Connect to **Fabric Warehouse**.
+- Refresh & publish the report.
+
+## **📊 Expected Outcomes**
+✅ **Automated SQL Server to Fabric Migration**
+✅ **Optimized Star Schema for Faster Analytics**
+✅ **Interactive Power BI Dashboards**
+✅ **Scalable Solution for Enterprise Reporting**
+
+## **📩 Contributions & Feedback**
+Feel free to improve the project. Feedback is welcome!
+
+## **📜 License**
+This project is licensed under the **MIT License** – see `LICENSE` for details.
+
+---
+🚀 **Built with Microsoft Fabric for Next-Gen Data Analytics!**
+---
 
 ## **8️⃣ Conclusion & Next Steps**
-This project **demonstrates the power of Microsoft Fabric** in building **modern, scalable data pipelines**.  
+This project demonstrates the power of Microsoft Fabric in building modern, scalable data pipelines. Future enhancements may include:
+✅ Machine Learning Integration for predictive insights.
+✅ Automated Performance Monitoring & Cost Optimization.  
 
 🚀 **This case study proves that Microsoft Fabric is the ultimate platform for seamless data engineering & analytics.**
 
