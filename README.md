@@ -2,7 +2,7 @@
 
 ## **1️⃣ Introduction & Objectives**
 ### **Project Overview**
-This project demonstrates an **end-to-end data engineering pipeline** using **Microsoft Fabric** to automate the migration, transformation, and analysis of enterprise data from an **on-premises SQL Server database (AdventureWorks SalesLT schema)**. The goal is to create a **scalable, analytics-ready architecture** for structured reporting in **Power BI**.
+This project demonstrates an **end-to-end data engineering pipeline** using **Microsoft Fabric** to automate the migration, transformation, and analysis of enterprise data from an **on-premises SQL Server database**. The goal is to create a **scalable, analytics-ready architecture** for structured reporting in **Power BI**.
 
 ### **Objectives**
 ✅ **Automate daily data ingestion** from SQL Server into Microsoft Fabric.  
@@ -26,12 +26,12 @@ The project follows a **multi-layered architecture**:
 ```
 SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → Lakehouse (Silver) → Fabric Warehouse (Gold) → Power BI Dashboards
 ```
-
+![Project Architecture](docs/Presentation_project.jpg).
 ---
 
 ## **3️⃣ Data Ingestion (Bronze Layer)**
 ### **Process**
-- **Data Source**: On-prem SQL Server (AdventureWorks SalesLT schema).  
+- **Data Source**: On-prem SQL Server .  
 - **Fabric Pipelines**: Automates daily ingestion of tables into **Microsoft Fabric Lakehouse (Files section, Parquet format)**.
 - **Data Storage**: Raw tables are stored in the **Bronze Layer** of the **Lakehouse**.
 
@@ -44,6 +44,10 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 | Product | Product details |
 | ProductCategory | Product classification |
 | ProductModel | Product model details |
+| Address | Adress of customers |
+| Cusomeraddress | Maps customer Id to Customer address info |
+| Productdescription | Describes prodct items in details |
+| ProductModelproductdescription | Product model details |
 
 ---
 
@@ -128,15 +132,23 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 - Create a **Microsoft Fabric Lakehouse**.
 - Create a **Fabric Warehouse** for structured analytics.
 - Import **SQL scripts** into the **Fabric Warehouse**.
+[SQL scripts](sql/).
 - Deploy **Pipelines** to automate data ingestion.
+[pipelines](pipelines/pipeline_file.json).
 
 ### **2️⃣ Execute Notebooks for Data Processing**
-- Run **bronze_layer.ipynb** for raw data ingestion.
-- Run **silver_layer.ipynb** for data cleansing.
-- Run **gold_layer.ipynb** for schema transformation.
+-Use **copy activity of pipeline** to ingest data into lakehouse
+- Run **bronze_layer.ipynb** process raw data ingested into silverlayer.
+[bronze_layer](notebooks/Bronze_Notebook.ipynb).
+- Run **Silver_Notebook_2.ipynb** silverlayer into gold layer.
+[Silver_Notebook](notebooks/Silver_Notebook_2.ipynb).
+- Run **views and storeprocedure** for schema transformation.
+[StoredProcedures](sql/StoredProcedures/Update_Warehouse_Daily.sql).
+[views](sql/Views/).
 
 ### **3️⃣ Load Data into Power BI**
-- Open `sales_dashboard.pbix` in **Power BI Desktop**.
+- Open `Sales_report.pbix` in **Power BI Desktop**.
+[Power BI Desktop](powerbi/).
 - Connect to **Fabric Warehouse**.
 - Refresh & publish the report.
 
