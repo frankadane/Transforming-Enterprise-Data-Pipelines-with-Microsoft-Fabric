@@ -57,12 +57,12 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 ## **4️⃣ Data Transformation & Schema Optimization (Silver & Gold Layers)**
 
 ### **🔹 Silver Layer **
-- Uses **Fabric Notebooks (Python)** for:
-  ✅ **Adjusting date columns to a standard "yyyy-MM-dd" format**
-  ✅ **Saving the transformed tables to their respective directories in the "silver" layer** 
-  ✅ **Renaming column names to follow the snake_case naming convention**
-  ✅ **Saving the transformed tables in Delta format**
-  ✅ **Saving as lakehouse tables in the gold layer**    
+- Uses **Fabric Notebooks (Python)** for:   
+  ✅ **Adjusting date columns to a standard "yyyy-MM-dd" format**.
+  ✅ **Saving the transformed tables to their respective directories in the "silver" layer** .
+  ✅ **Renaming column names to follow the snake_case naming convention**.
+  ✅ **Saving the transformed tables in Delta format**.
+  ✅ **Saving as lakehouse tables in the gold layer**. 
   [Tranformation 1](notebooks/Bronze_Notebook.ipynb).            
   [transformation 2](notebooks/Silver_Notebook_2.ipynb).
   
