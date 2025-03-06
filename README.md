@@ -112,8 +112,8 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 | modified_date | DATETIME2(3) | Last update timestamp |
 
 #### **🔹 Dimension Table: `address`**
-|---------|------------|-------------|
 | Column | Data Type | Description |
+|---------|------------|-------------|
 | address_id | INT | Unique address ID |
 | address_line1 | VARCHAR(255) | Address |
 | address_line2 | VARCHAR(8000) | Address |
