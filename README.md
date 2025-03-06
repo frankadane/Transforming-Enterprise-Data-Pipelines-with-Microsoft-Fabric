@@ -28,6 +28,7 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 ```
 ![Project Architecture](doc/Presentation_project.jpg).
 
+### **🔹 Pipeline Flow Diagram**
 ![Pipeline](pipelines/pipeline_flowchart.png).
 ---
 
@@ -55,46 +56,74 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 
 ## **4️⃣ Data Transformation & Schema Optimization (Silver & Gold Layers)**
 
-### **🔹 Silver Layer (Cleansing & Normalization)**
-- Uses **Fabric Notebooks (SQL & Python)** for:
-  ✅ **Handling missing values**
-  ✅ **Data type standardization**
-  ✅ **Removing duplicates**
-
+### **🔹 Silver Layer **
+- Uses **Fabric Notebooks (Python)** for:
+  ✅ **Adjusting date columns to a standard "yyyy-MM-dd" format**
+  ✅ **Saving the transformed tables to their respective directories in the "silver" layer** 
+  ✅ **Renaming column names to follow the snake_case naming convention**
+  ✅ **Saving the transformed tables in Delta format**
+  ✅ **Saving as lakehouse tables in the gold layer**    
+  [Tranformation 1](notebooks/Bronze_Notebook.ipynb).            
+  [transformation 2](notebooks/Silver_Notebook_2.ipynb).
+  
 ### **🔹 Gold Layer (Star Schema in Fabric Warehouse)**
-- **Denormalization** of Snowflake Schema into **Star Schema** for optimized queries.
+- **Denormalization** of Snowflake Schema into **Star Schema** for optimized queries using Views.
 - **Fact & Dimension Tables** created in **Fabric Warehouse**.
+- **storeprocedure to perform daily updates** .       
+[SQL scripts](sql/)
 
 #### **🔹 Fact Table: `fact_sales_order`**
 | Column | Data Type | Description |
 |---------|------------|-------------|
 | sales_order_id | INT | Unique Order ID |
+| sales_order_detail_id | INT | Unique order detail id |
 | customer_id | INT | Foreign Key to Customer |
 | product_id | INT | Foreign Key to Product |
+| address_id | INT | Unique address ID | 
 | order_qty | SMALLINT | Quantity ordered |
 | unit_price | DECIMAL(18,2) | Sale price per unit |
+| unit_price_discount | DECIMAL(38,18) | Unit price discount|
 | line_total | DECIMAL(18,2) | Total transaction value |
 | order_date | DATETIME2(3) | Order placement date |
+| modified_date | VARCHAR(8000) | Last update timestamp |
 
-#### **🔹 Dimension Table: `dim_customer`**
+#### **🔹 Dimension Table: `customer`**
 | Column | Data Type | Description |
 |---------|------------|-------------|
 | customer_id | INT | Unique Customer ID |
 | full_name | VARCHAR(255) | Customer full name |
 | company_name | VARCHAR(255) | Company name |
+| sales_person | varchar(8000) | Sales person |
 | email_address | VARCHAR(255) | Email |
 | phone | VARCHAR(50) | Contact number |
 | modified_date | DATETIME2(3) | Last update timestamp |
 
-#### **🔹 Dimension Table: `dim_product`**
+#### **🔹 Dimension Table: `product`**
 | Column | Data Type | Description |
 |---------|------------|-------------|
 | product_id | INT | Unique Product ID |
 | product_name | VARCHAR(255) | Name of product |
+| product_number | varchar(8000) | Product number |
+| color | VARCHAR(8000) NULL | Product Color |
 | product_category | VARCHAR(255) | Product category |
 | standard_cost | DECIMAL(18,2) | Base production cost |
 | list_price | DECIMAL(18,2) | Retail price |
+| product_model | VARCHAR(8000) | Product model |
 | modified_date | DATETIME2(3) | Last update timestamp |
+
+#### **🔹 Dimension Table: `address`**
+| Column | Data Type | Description |
+| address_id | INT | Unique address ID |
+| address_line1 | VARCHAR(255) | Address |
+| address_line2 | VARCHAR(8000) | Address |
+| city | VARCHAR(8000) | city  |
+| state_province | VARCHAR(8000) | State province |
+| country_region | VARCHAR(8000) | Country |
+| postal_code | VARCHAR(8000) | Postal code |
+| modified_date | VARCHAR(8000) | Last update timestamp |
+
+### **🔹 Semantic model (Star schema) Diagram**   
+![model_diagram](doc/model_diagram.png).
 
 ---
 
