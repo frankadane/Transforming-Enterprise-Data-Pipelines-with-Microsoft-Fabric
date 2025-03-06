@@ -134,8 +134,8 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 - **Direct Lake Mode** enables real-time reporting.  
 - **Dashboards provide insights on:**  
   ✅ **Sales Trends** (Top-selling products, revenue breakdowns)     
-  ✅ **Customer Analytics** (Repeat buyers, location-based insights)    
-  ✅ **Inventory Performance**    
+  ✅ **Customer Analytics** (location-based insights)    
+   
 
 ---
 
