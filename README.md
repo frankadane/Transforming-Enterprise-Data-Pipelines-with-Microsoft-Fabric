@@ -58,13 +58,13 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 
 ### **🔹 Silver Layer **
 - Uses **Fabric Notebooks (Python)** for:   
-  ✅ **Adjusting date columns to a standard "yyyy-MM-dd" format**.
-  ✅ **Saving the transformed tables to their respective directories in the "silver" layer** .
-  ✅ **Renaming column names to follow the snake_case naming convention**.
-  ✅ **Saving the transformed tables in Delta format**.
-  ✅ **Saving as lakehouse tables in the gold layer**. 
-  [Tranformation 1](notebooks/Bronze_Notebook.ipynb).            
-  [transformation 2](notebooks/Silver_Notebook_2.ipynb).
+  ✅ **Adjusting date columns to a standard "yyyy-MM-dd" format**.   
+  ✅ **Saving the transformed tables to their respective directories in the "silver" layer** .   
+  ✅ **Renaming column names to follow the snake_case naming convention**.   
+  ✅ **Saving the transformed tables in Delta format**.   
+  ✅ **Saving as lakehouse tables in the gold layer**.    
+  [Tranformation 1](notebooks/Bronze_Notebook.ipynb).              
+  [transformation 2](notebooks/Silver_Notebook_2.ipynb).   
   
 ### **🔹 Gold Layer (Star Schema in Fabric Warehouse)**
 - **Denormalization** of Snowflake Schema into **Star Schema** for optimized queries using Views.
@@ -112,6 +112,7 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 | modified_date | DATETIME2(3) | Last update timestamp |
 
 #### **🔹 Dimension Table: `address`**
+|---------|------------|-------------|
 | Column | Data Type | Description |
 | address_id | INT | Unique address ID |
 | address_line1 | VARCHAR(255) | Address |
@@ -130,11 +131,11 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 ## **5️⃣ Fabric Warehouse & Reporting**
 
 ### **Power BI Integration**
-- **Direct Lake Mode** enables real-time reporting.
-- **Dashboards provide insights on:**
-  ✅ **Sales Trends** (Top-selling products, revenue breakdowns)  
-  ✅ **Customer Analytics** (Repeat buyers, location-based insights)  
-  ✅ **Inventory Performance**  
+- **Direct Lake Mode** enables real-time reporting.  
+- **Dashboards provide insights on:**  
+  ✅ **Sales Trends** (Top-selling products, revenue breakdowns)     
+  ✅ **Customer Analytics** (Repeat buyers, location-based insights)    
+  ✅ **Inventory Performance**    
 
 ---
 
@@ -168,7 +169,7 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 [pipelines](pipelines/pipeline_file.json).
 
 ### **2️⃣ Execute Notebooks for Data Processing**
--Use **copy activity of pipeline** to ingest data into lakehouse
+-Use **copy activity of pipeline** to ingest data into lakehouse.
 - Run **bronze_layer.ipynb** process raw data ingested into silverlayer.
 [bronze_layer](notebooks/Bronze_Notebook.ipynb).
 - Run **Silver_Notebook_2.ipynb** silverlayer into gold layer.
@@ -184,10 +185,10 @@ SQL Server → Fabric Pipelines → Lakehouse (Bronze) → Fabric Notebooks → 
 - Refresh & publish the report.
 
 ## **📊 Expected Outcomes**
-✅ **Automated SQL Server to Fabric Migration**
-✅ **Optimized Star Schema for Faster Analytics**
-✅ **Interactive Power BI Dashboards**
-✅ **Scalable Solution for Enterprise Reporting**
+✅ **Automated SQL Server to Fabric Migration**.   
+✅ **Optimized Star Schema for Faster Analytics**.   
+✅ **Interactive Power BI Dashboards**.   
+✅ **Scalable Solution for Enterprise Reporting**.   
 
 ## **📩 Contributions & Feedback**
 Feel free to improve the project. Feedback is welcome!
@@ -200,9 +201,9 @@ This project is licensed under the **MIT License** – see `LICENSE` for details
 ---
 
 ## **8️⃣ Conclusion & Next Steps**
-This project demonstrates the power of Microsoft Fabric in building modern, scalable data pipelines. Future enhancements may include:
-✅ Machine Learning Integration for predictive insights.
-✅ Automated Performance Monitoring & Cost Optimization.  
+This project demonstrates the power of Microsoft Fabric in building modern, scalable data pipelines. Future enhancements may include:   
+✅ Machine Learning Integration for predictive insights.   
+✅ Automated Performance Monitoring & Cost Optimization.     
 
 🚀 **This case study proves that Microsoft Fabric is the ultimate platform for seamless data engineering & analytics.**
 
